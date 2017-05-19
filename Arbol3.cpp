@@ -11,7 +11,10 @@ struct nodo{
 void menu(nodo *&);
 void insertar_nodo(nodo *&,int);
 bool buscar_nodo(nodo *,int);
-void mostrar_arbol(nodo *&,int);
+void mostrar_preorden(nodo *);
+void mostrar_inorden(nodo *);
+void mostrar_posorden(nodo *);
+void modificar_nodo(nodo *&,int);
 
 int main(){
     nodo *arbol=NULL;
@@ -48,11 +51,34 @@ void menu(nodo *&arbol){
                 scanf("%d",&a);
             }while(a!=2);
         }break;
+        case 2:{
+            system("cls");
+            printf("1. Mostrar arbol en preorden\n");
+            printf("2. Mostrar arbol en inorden\n");
+            printf("3. Mostrar arbol en posorden\n");
+            printf("Digite opcion: ");
+            scanf("%d",&a);
+            switch(a){
+                case 1:{
+                    mostrar_preorden(arbol);
+                    printf("\n");
+                }break;
+                case 2:{
+                    mostrar_inorden(arbol);
+                    printf("\n");
+                }break;
+                case 3:{
+                    mostrar_posorden(arbol);
+                    printf("\n");
+                }break;
+                default: printf("Opcion incorrecta\n");
+            }
+        }break;
         case 3:{
             printf("Ingrese dato que desea buscar: ");
             scanf("%s",&c);
             int convertir=c;
-            if(convertir>=62 && convertir<=90 || convertir>=97 && convertir<=122){
+            if(convertir>=65 && convertir<=90 || convertir>=97 && convertir<=122){
                 if(convertir>90){
                     convertir=convertir-32;
                 }
@@ -65,6 +91,19 @@ void menu(nodo *&arbol){
                 printf("Caracter ingresado no valido\n");
             }
             system("pause");
+        }break;
+        case 4:{
+            printf("Ingrese dato que desea modificar: ");
+            scanf("%s",&c);
+            int conver=c;
+            if(conver>=62 && conver<=90 || conver>=97 && conver<=122){
+                if(conver>90){
+                    conver=conver-32;
+                }
+                modificar_nodo(arbol,conver);
+            }else{
+                printf("Caracter ingresado no es valido\n");
+            }
         }break;
     }
     menu(arbol);
@@ -104,3 +143,61 @@ bool buscar_nodo(nodo *arbol, int n){
         return buscar_nodo(arbol->der,n);
     }
 }
+
+void mostrar_preorden(nodo *arbol){
+    if(arbol==NULL){
+        return;
+    }else{
+        char convertir=arbol->dato;
+        printf("%c ",convertir);
+        mostrar_preorden(arbol->izq);
+        mostrar_preorden(arbol->der);
+    }
+}
+
+void mostrar_inorden(nodo *arbol){
+    if(arbol==NULL){
+        return;
+    }else{
+        mostrar_inorden(arbol->izq);
+        char convertir=arbol->dato;
+        printf("%c ",convertir);
+        mostrar_inorden(arbol->der);
+    }
+}
+
+void mostrar_posorden(nodo *arbol){
+    if(arbol==NULL){
+        return;
+    }else{
+        mostrar_posorden(arbol->izq);
+        mostrar_posorden(arbol->der);
+        char convertir=arbol->dato;
+        printf("%c ",convertir);
+    }
+}
+
+void modificar_nodo(nodo *&arbol, int n){
+    char c;
+    if(arbol==NULL){
+        return;
+    }else if(arbol->dato==n){
+        printf("Ingrese nuevo dato: ");
+        scanf("%s",&c);
+        int convertir=c;
+        if(convertir>=65 && convertir<=90 || convertir>=97 && convertir<=122){
+            if(convertir>90){
+                convertir=convertir-32;
+            }
+            arbol->dato=convertir;
+        }else{
+            printf("Caracter ingresado no valido\n");
+        }
+        return;
+    }else if(n<arbol->dato){
+        return modificar_nodo(arbol->izq,n);
+    }else{
+        return modificar_nodo(arbol->der,n);
+    }
+}
+
